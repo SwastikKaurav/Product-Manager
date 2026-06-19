@@ -29,27 +29,35 @@ export default function ProductManager(){
         </div>
     ))}
     <form>
+        <label for="name">Name : </label>
         <input
+            id="name"
             name = "name"
-            value = {form.value}
+            value = {form.name}
             onChange={(e) => setForm({...form, [e.target.name]:e.target.value})}
             placeholder = "Product Name"
         />
+        <label for="description">Description : </label>
         <input
+            id="description"
             name = "description"
-            value = {form.value}
+            value = {form.description}
             onChange={(e) => setForm({...form, [e.target.name]:e.target.value})}
             placeholder = "Description"
         />
+        <label for="price">Price : </label>
         <input
+            id="price"
             name = "price"
-            value = {form.value}
+            value = {form.price}
             onChange={(e) => setForm({...form, [e.target.name]:e.target.value})}
             placeholder = "Price"
         />
+        <label for="quantity">Quantity : </label>
         <input
+            id="quantity"
             name = "quantity"
-            value = {form.value}
+            value = {form.quantity}
             onChange = {(e) => setForm({...form, [e.target.name]:e.target.value})}
             placeholder = "Quantity"
         />
