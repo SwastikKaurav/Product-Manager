@@ -28,7 +28,33 @@ export default function ProductManager(){
             <p>${product.price} | qty: {product.quantity}</p>
         </div>
     ))}
-    
+    <form>
+        <input
+            name = "name"
+            value = {form.value}
+            onChange={(e) => setForm({...form, [e.target.name]:e.target.value})}
+            placeholder = "Product Name"
+        />
+        <input
+            name = "description"
+            value = {form.value}
+            onChange={(e) => setForm({...form, [e.target.name]:e.target.value})}
+            placeholder = "Description"
+        />
+        <input
+            name = "price"
+            value = {form.value}
+            onChange={(e) => setForm({...form, [e.target.name]:e.target.value})}
+            placeholder = "Price"
+        />
+        <input
+            name = "quantity"
+            value = {form.value}
+            onChange = {(e) => setForm({...form, [e.target.name]:e.target.value})}
+            placeholder = "Quantity"
+        />
+
+    </form>
     </>
 )
 }
