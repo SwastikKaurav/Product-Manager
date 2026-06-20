@@ -17,7 +17,7 @@ def get_product(db: Session):
     return db_product
 
 def create_product(product:Product, db: Session):
-    db_product = database_models.Product(**product.model_dump())
+    db_product = database_models.Product(**product.model_dump(exclude={"id"}))
     db.add(db_product)
     db.commit()
     db.refresh(db_product)

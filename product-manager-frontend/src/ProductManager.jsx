@@ -5,31 +5,37 @@ export default function ProductManager(){
     const [form, setForm] = useState({name:"",description:"",price:"",quantity:""})
 
     useEffect(() => {
-    async function loadProducts() {
-        try {
-            const res = await fetch("http://localhost:8000/products/");
-            const data = await res.json();
-            setProducts(data);
-        } catch (error) {
-            console.log(error);
+        async function loadProducts() {
+            try {
+                const res = await fetch("http://localhost:8000/products/")
+                const data = await res.json()
+                setProducts(data)
+            } catch (error) {
+                console.log(error)
+            }
         }
-    }
 
-    loadProducts();
-}, []);
+        loadProducts();
+    }, []);
+
+    async function handleSubmit(e){
+        e.preventDefault()
+        const res = await fetch("http://localhost:8000/products/create/",{
+            method : "POST",
+            headers : {"Content-Type": "application/json"},
+            body : JSON.stringify({...form, price:parseFloat(form.price), quantity:parseInt(form.quantity)})
+        })
+        const data = await res.json()
+        setProducts([...products, data])
+        setForm({name:"",description:"",price:"",quantity:""})
+    }
 
     return(
     <>
     <h1 className="heading">Product Manager</h1>
     <p>Connected to FastAPI at http://localhost:8000</p>
-    {products.map((product) => (
-        <div key={product.id}>
-            <p>{product.name} - {product.description}</p>
-            <p>${product.price} | qty: {product.quantity}</p>
-        </div>
-    ))}
-    <form>
-        <label for="name">Name : </label>
+    <form onSubmit={handleSubmit}>
+        <label htmlFor="name">Name : </label>
         <input
             id="name"
             name = "name"
@@ -37,7 +43,7 @@ export default function ProductManager(){
             onChange={(e) => setForm({...form, [e.target.name]:e.target.value})}
             placeholder = "Product Name"
         />
-        <label for="description">Description : </label>
+        <label htmlFor="description">Description : </label>
         <input
             id="description"
             name = "description"
@@ -45,7 +51,7 @@ export default function ProductManager(){
             onChange={(e) => setForm({...form, [e.target.name]:e.target.value})}
             placeholder = "Description"
         />
-        <label for="price">Price : </label>
+        <label htmlFor="price">Price : </label>
         <input
             id="price"
             name = "price"
@@ -53,7 +59,7 @@ export default function ProductManager(){
             onChange={(e) => setForm({...form, [e.target.name]:e.target.value})}
             placeholder = "Price"
         />
-        <label for="quantity">Quantity : </label>
+        <label htmlFor="quantity">Quantity : </label>
         <input
             id="quantity"
             name = "quantity"
@@ -61,8 +67,16 @@ export default function ProductManager(){
             onChange = {(e) => setForm({...form, [e.target.name]:e.target.value})}
             placeholder = "Quantity"
         />
+        <button type="Submit">Add Product</button>
 
     </form>
+    
+    {products.map((product) => (
+        <div key={product.id}>
+            <p>{product.name} - {product.description}</p>
+            <p>${product.price} | qty: {product.quantity}</p>
+        </div>
+    ))} 
     </>
 )
 }
