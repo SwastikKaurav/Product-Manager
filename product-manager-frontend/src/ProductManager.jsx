@@ -34,7 +34,7 @@ export default function ProductManager(){
         const res = await fetch(`http://localhost:8000/products/delete/${id}`,{
             method : "DELETE"
         })
-
+        setProducts(products.filter(product=>(product.id !== id)))
     }
 
     return(
