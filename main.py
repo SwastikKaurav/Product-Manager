@@ -39,6 +39,6 @@ def update_products(product_id: int, product: Product, db: Session = Depends(get
     return update_product(product, product_id, db)
 
 
-@app.delete("/products/{product_id}", response_model=Product)
+@app.delete("/products/delete/{product_id}", response_model=Product)
 def delete_products(product_id: int, db: Session = Depends(get_db)):
     return delete_product(product_id, db)

@@ -30,6 +30,13 @@ export default function ProductManager(){
         setForm({name:"",description:"",price:"",quantity:""})
     }
 
+    async function handleDelete(id){
+        const res = await fetch(`http://localhost:8000/products/delete/${id}`,{
+            method : "DELETE"
+        })
+
+    }
+
     return(
     <>
     <h1 className="heading">Product Manager</h1>
@@ -75,6 +82,7 @@ export default function ProductManager(){
         <div key={product.id}>
             <p>{product.name} - {product.description}</p>
             <p>${product.price} | qty: {product.quantity}</p>
+            <button onClick={()=>handleDelete(product.id)}>Delete Product</button>
         </div>
     ))} 
     </>
