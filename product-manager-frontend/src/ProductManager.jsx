@@ -33,20 +33,24 @@ export default function ProductManager(){
         else if(editId === null){
             try{
                 res = await fetch("http://localhost:8000/products/create/",{
-                method : "POST",
-                headers : {"Content-Type": "application/json"},
-                body : JSON.stringify({...form, price:parseFloat(form.price), quantity:parseInt(form.quantity)})
-                })
+                    method : "POST",
+                    headers : {"Content-Type": "application/json"},
+                    body : JSON.stringify({...form, price:parseFloat(form.price), quantity:parseInt(form.quantity)})
+                    })
             }catch{
                 setError("Cannot connect to server. Is it running?")
             }
         }
         else{
-            res = await fetch(`http://localhost:8000/products/${editId}/`,{
-            method : "PUT",
-            headers : {"Content-Type": "application/json"},
-            body : JSON.stringify({...form, price:parseFloat(form.price), quantity:parseInt(form.quantity)})
-        })
+            try{
+                res = await fetch(`http://localhost:8000/products/${editId}/`,{
+                    method : "PUT",
+                    headers : {"Content-Type": "application/json"},
+                    body : JSON.stringify({...form, price:parseFloat(form.price), quantity:parseInt(form.quantity)})
+                    })
+            }catch{
+                setError("Cannot connect to server. Is it running?")
+            }
         }
         
         const data = await res.json()
