@@ -1,4 +1,5 @@
 import {useEffect, useState} from "react"
+import "./ProductManager.css"
 
 export default function ProductManager(){
     let [products, setProducts] = useState([])
@@ -160,16 +161,18 @@ export default function ProductManager(){
             {products.map((product) => (
                 <div key={product.id} className="product">
                     <div className="product-icon">{product.name[0]}</div>
-                    <div className="product-info">
+                    <div className="product-details">
                         <p className="product-name">{product.name}</p>
                         <p className="product-description">{product.description}</p>
-                        <div>
+                        <div className="product-badges">
                             <p className="product-price">${product.price}</p>
                             <p className="product-quantity">qty: {product.quantity}</p>
                         </div>
                     </div>
-                    <button onClick={() => handleEdit(product)} className="product-edit">Edit</button>
-                    <button onClick={()=>handleDelete(product.id)} className="product-delete">Delete</button>
+                    <div className="product-actions">
+                        <button onClick={() => handleEdit(product)} className="product-edit">Edit</button>
+                        <button onClick={() => handleDelete(product.id)} className="product-delete">Delete</button>
+                    </div>
                 </div>
             ))} 
         </div>
