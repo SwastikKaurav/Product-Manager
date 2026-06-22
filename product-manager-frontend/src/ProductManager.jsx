@@ -3,7 +3,7 @@ import {useEffect, useState} from "react"
 export default function ProductManager(){
     let [products, setProducts] = useState([])
     const [form, setForm] = useState({name:"",description:"",price:"",quantity:""})
-
+    const [editId, setEditId] = useState(null)
     useEffect(() => {
         async function loadProducts() {
             try {
@@ -16,21 +16,38 @@ export default function ProductManager(){
         }
 
         loadProducts();
+
     }, []);
 
     async function handleSubmit(e){
         e.preventDefault()
-        const res = await fetch("http://localhost:8000/products/create/",{
+        let res;
+        if(editId === null){
+            res = await fetch("http://localhost:8000/products/create/",{
             method : "POST",
             headers : {"Content-Type": "application/json"},
             body : JSON.stringify({...form, price:parseFloat(form.price), quantity:parseInt(form.quantity)})
         })
+        }
+        else{
+            res = await fetch(`http://localhost:8000/products/${editId}/`,{
+            method : "PUT",
+            headers : {"Content-Type": "application/json"},
+            body : JSON.stringify({...form, price:parseFloat(form.price), quantity:parseInt(form.quantity)})
+        })
+        }
+        
         const data = await res.json()
         if (res.ok){
-            setProducts([...products, data])
+            if (editId){
+                setProducts(products.map(p => p.id === editId ? data : p))
+            } else {
+                setProducts([...products, data])
+            }
+            setEditId(null)
             setForm({name:"",description:"",price:"",quantity:""})
         }
-    }
+    }   
 
     async function handleDelete(id){
         const res = await fetch(`http://localhost:8000/products/delete/${id}`,{
@@ -39,6 +56,11 @@ export default function ProductManager(){
         if (res.ok){
             setProducts(products.filter(product=>(product.id !== id)))
         }
+    }
+
+    async function handleEdit(product){
+        setEditId(product.id)
+        setForm({...form,name:product.name, description:product.description, price:product.price, quantity:product.quantity})
     }
 
     return(
@@ -78,7 +100,7 @@ export default function ProductManager(){
             onChange = {(e) => setForm({...form, [e.target.name]:e.target.value})}
             placeholder = "Quantity"
         />
-        <button type="Submit">Add Product</button>
+        <button type="Submit">{editId? "Update Product":"Add Product"}</button>
 
     </form>
     
@@ -87,6 +109,7 @@ export default function ProductManager(){
             <p>{product.name} - {product.description}</p>
             <p>${product.price} | qty: {product.quantity}</p>
             <button onClick={()=>handleDelete(product.id)}>Delete Product</button>
+            <button onClick={() => handleEdit(product)}>Edit</button>
         </div>
     ))} 
     </>
