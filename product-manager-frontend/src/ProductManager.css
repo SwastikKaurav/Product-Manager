@@ -315,3 +315,13 @@ main {
 .product-delete:hover {
     background: #450a0a;
 }
+
+.error-message {
+    color: #f87171;
+    font-size: 13px;
+    background: #2b0f0f;
+    border: 1px solid #7f1d1d;
+    padding: 8px 12px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+}

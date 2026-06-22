@@ -24,48 +24,45 @@ export default function ProductManager(){
 
     async function handleSubmit(e){
         e.preventDefault()
-        let res;
+        setError("")  
 
         if (!form.name || !form.description || !form.price || !form.quantity){
-        setError("Please fill in all fields.")
-        return
+            setError("Please fill in all fields.")
+            return
         }
-        else if(editId === null){
-            try{
-                res = await fetch("http://localhost:8000/products/create/",{
-                    method : "POST",
-                    headers : {"Content-Type": "application/json"},
-                    body : JSON.stringify({...form, price:parseFloat(form.price), quantity:parseInt(form.quantity)})
-                    })
-            }catch{
-                setError("Cannot connect to server. Is it running?")
-            }
-        }
-        else{
-            try{
-                res = await fetch(`http://localhost:8000/products/${editId}/`,{
-                    method : "PUT",
-                    headers : {"Content-Type": "application/json"},
-                    body : JSON.stringify({...form, price:parseFloat(form.price), quantity:parseInt(form.quantity)})
-                    })
-            }catch{
-                setError("Cannot connect to server. Is it running?")
-            }
-        }
-        
-        const data = await res.json()
-        if (res.ok){
-            if (editId){
-                setProducts(products.map(p => p.id === editId ? data : p))
+
+        let res
+        try {
+            if (editId === null){
+                res = await fetch("http://localhost:8000/products/create/", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({...form, price:parseFloat(form.price), quantity:parseInt(form.quantity)})
+                })
             } else {
-                setProducts([...products, data])
+                res = await fetch(`http://localhost:8000/products/${editId}/`, {
+                    method: "PUT",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({...form, price:parseFloat(form.price), quantity:parseInt(form.quantity)})
+                })
             }
-            setEditId(null)
-            setForm({name:"",description:"",price:"",quantity:""})
-        }else{
-            setError("Something went wrong. Please try again.")
+
+            const data = await res.json()
+            if (res.ok){
+                if (editId){
+                    setProducts(products.map(p => p.id === editId ? data : p))
+                } else {
+                    setProducts([...products, data])
+                }
+                setEditId(null)
+                setForm({name:"", description:"", price:"", quantity:""})
+            } else {
+                setError("Something went wrong. Please try again.")
+            }
+        } catch {
+            setError("Cannot connect to server. Is it running?")
         }
-    }   
+    }
 
     async function handleDelete(id){
         const res = await fetch(`http://localhost:8000/products/delete/${id}`,{
@@ -164,6 +161,7 @@ export default function ProductManager(){
                 </div>
             </div>
 
+            {error && <p className="error-message">{error}</p>}
             <button type="Submit" className="form-button">{editId? "Update Product":"Add Product"}</button>
 
         </form>
