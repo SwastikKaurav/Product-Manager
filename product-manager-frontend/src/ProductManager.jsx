@@ -63,55 +63,117 @@ export default function ProductManager(){
         setForm({...form,name:product.name, description:product.description, price:product.price, quantity:product.quantity})
     }
 
+    let totalStock = products.reduce((total, product) => total + product.quantity, 0)
+    let avgPrice = products.length > 0 
+    ? (products.reduce((sum, p) => sum + p.price, 0) / products.length).toFixed(2)
+    : 0
     return(
     <>
-    <h1 className="heading">Product Manager</h1>
-    <p>Connected to FastAPI at http://localhost:8000</p>
-    <form onSubmit={handleSubmit}>
-        <label htmlFor="name">Name : </label>
-        <input
-            id="name"
-            name = "name"
-            value = {form.name}
-            onChange={(e) => setForm({...form, [e.target.name]:e.target.value})}
-            placeholder = "Product Name"
-        />
-        <label htmlFor="description">Description : </label>
-        <input
-            id="description"
-            name = "description"
-            value = {form.description}
-            onChange={(e) => setForm({...form, [e.target.name]:e.target.value})}
-            placeholder = "Description"
-        />
-        <label htmlFor="price">Price : </label>
-        <input
-            id="price"
-            name = "price"
-            value = {form.price}
-            onChange={(e) => setForm({...form, [e.target.name]:e.target.value})}
-            placeholder = "Price"
-        />
-        <label htmlFor="quantity">Quantity : </label>
-        <input
-            id="quantity"
-            name = "quantity"
-            value = {form.quantity}
-            onChange = {(e) => setForm({...form, [e.target.name]:e.target.value})}
-            placeholder = "Quantity"
-        />
-        <button type="Submit">{editId? "Update Product":"Add Product"}</button>
+    <header>
+        <h1 className="heading">Product Manager</h1>
+        <p>Connected to FastAPI</p>
+    </header>
 
-    </form>
-    
-    {products.map((product) => (
-        <div key={product.id}>
-            <p>{product.name} - {product.description}</p>
-            <p>${product.price} | qty: {product.quantity}</p>
-            <button onClick={()=>handleDelete(product.id)}>Delete Product</button>
-            <button onClick={() => handleEdit(product)}>Edit</button>
+    <div className="product-info">
+        <div className="total-info-container">
+            <h3 className="total-info">Total Products</h3>
+            <p>{products.length}</p>
         </div>
-    ))} 
+        <div>
+            <h3 className="total-info">Total Stock</h3>
+            <p>
+                {totalStock}
+            </p>
+        </div>
+        <div>
+            <h3 className="total-info">Avg. Price</h3>
+            <p>
+                ${avgPrice}
+            </p>
+        </div>
+    </div>
+    <main>
+        <div className="input-collector-text">
+            <p>+</p>
+            <p>Add a product</p>
+        </div>
+        <form onSubmit={handleSubmit}>
+
+            <div className="input-collector">
+    
+                <div className="input-label">
+                    <label htmlFor="name">Name : </label>
+                    <input
+                        id="name"
+                        name = "name"
+                        value = {form.name}
+                        onChange={(e) => setForm({...form, [e.target.name]:e.target.value})}
+                        placeholder = "Product Name"
+                    />
+                </div>
+                
+                <div className="input-label">
+                    <label htmlFor="description">Description : </label>
+                    <input
+                        id="description"
+                        name = "description"
+                        value = {form.description}
+                        onChange={(e) => setForm({...form, [e.target.name]:e.target.value})}
+                        placeholder = "Description"
+                    />
+                </div>
+
+                <div className="input-label">
+                    <label htmlFor="price">Price : </label>
+                    <input
+                        id="price"
+                        name = "price"
+                        value = {form.price}
+                        onChange={(e) => setForm({...form, [e.target.name]:e.target.value})}
+                        placeholder = "Price"
+                    />
+                </div>
+
+                <div className="input-label">
+                    <label htmlFor="quantity">Quantity : </label>
+                    <input
+                        id="quantity"
+                        name = "quantity"
+                        value = {form.quantity}
+                        onChange = {(e) => setForm({...form, [e.target.name]:e.target.value})}
+                        placeholder = "Quantity"
+                    />
+                </div>
+            </div>
+
+            <button type="Submit" className="form-button">{editId? "Update Product":"Add Product"}</button>
+
+        </form>
+    </main>
+    
+    <div className="product-list">
+        <div>
+            <p className="product-text">Products</p>
+            <p>{products.length} items</p>
+        </div>
+        <div className="product-container">
+            {products.map((product) => (
+                <div key={product.id} className="product">
+                    <div className="product-icon">{product.name[0]}</div>
+                    <div className="product-info">
+                        <p className="product-name">{product.name}</p>
+                        <p className="product-description">{product.description}</p>
+                        <div>
+                            <p className="product-price">${product.price}</p>
+                            <p className="product-quantity">qty: {product.quantity}</p>
+                        </div>
+                    </div>
+                    <button onClick={() => handleEdit(product)} className="product-edit">Edit</button>
+                    <button onClick={()=>handleDelete(product.id)} className="product-delete">Delete</button>
+                </div>
+            ))} 
+        </div>
+    </div>
     </>
 )
 }
