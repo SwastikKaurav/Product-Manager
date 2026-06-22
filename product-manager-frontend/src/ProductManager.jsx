@@ -26,15 +26,19 @@ export default function ProductManager(){
             body : JSON.stringify({...form, price:parseFloat(form.price), quantity:parseInt(form.quantity)})
         })
         const data = await res.json()
-        setProducts([...products, data])
-        setForm({name:"",description:"",price:"",quantity:""})
+        if (res.ok){
+            setProducts([...products, data])
+            setForm({name:"",description:"",price:"",quantity:""})
+        }
     }
 
     async function handleDelete(id){
         const res = await fetch(`http://localhost:8000/products/delete/${id}`,{
             method : "DELETE"
         })
-        setProducts(products.filter(product=>(product.id !== id)))
+        if (res.ok){
+            setProducts(products.filter(product=>(product.id !== id)))
+        }
     }
 
     return(
