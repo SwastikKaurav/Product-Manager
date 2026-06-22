@@ -5,6 +5,8 @@ export default function ProductManager(){
     let [products, setProducts] = useState([])
     const [form, setForm] = useState({name:"",description:"",price:"",quantity:""})
     const [editId, setEditId] = useState(null)
+    let [error, setError] = useState("")
+
     useEffect(() => {
         async function loadProducts() {
             try {
@@ -23,12 +25,21 @@ export default function ProductManager(){
     async function handleSubmit(e){
         e.preventDefault()
         let res;
-        if(editId === null){
-            res = await fetch("http://localhost:8000/products/create/",{
-            method : "POST",
-            headers : {"Content-Type": "application/json"},
-            body : JSON.stringify({...form, price:parseFloat(form.price), quantity:parseInt(form.quantity)})
-        })
+
+        if (!form.name || !form.description || !form.price || !form.quantity){
+        setError("Please fill in all fields.")
+        return
+        }
+        else if(editId === null){
+            try{
+                res = await fetch("http://localhost:8000/products/create/",{
+                method : "POST",
+                headers : {"Content-Type": "application/json"},
+                body : JSON.stringify({...form, price:parseFloat(form.price), quantity:parseInt(form.quantity)})
+                })
+            }catch{
+                setError("Cannot connect to server. Is it running?")
+            }
         }
         else{
             res = await fetch(`http://localhost:8000/products/${editId}/`,{
@@ -47,6 +58,8 @@ export default function ProductManager(){
             }
             setEditId(null)
             setForm({name:"",description:"",price:"",quantity:""})
+        }else{
+            setError("Something went wrong. Please try again.")
         }
     }   
 
