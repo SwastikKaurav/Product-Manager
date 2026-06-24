@@ -1,3 +1,3 @@
 # Product Manager
 
-A modern Product Management platform built with **React.js** for the frontend and **FastAPI** for the backend. Product Manager helps teams organize, track, and manage products, features, requirements, and workflows through a clean and responsive web interface.
+A modern Product Management platform built with **React.js** for the frontend and **FastAPI** for the backend. In this application, an user can store all the information of their products, they have or they to buy.
