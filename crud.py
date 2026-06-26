@@ -41,7 +41,7 @@ def delete_product(product_id:int, db: Session):
     if db_product:
         db.delete(db_product)
         db.commit()
-        return f"Product '{db_product.name}' (id={product_id}) deleted."
+        return db_product
     else:
         return "product not found"
 

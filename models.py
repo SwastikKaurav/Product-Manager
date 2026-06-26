@@ -7,3 +7,18 @@ class Product(BaseModel):
     description:str
     price:float
     quantity:int
+
+class UserRegister(BaseModel):
+    email: str
+    password: str
+
+class UserLogin(BaseModel):
+    email: str
+    password: str
+
+class UserResponse(BaseModel):
+    class Config:
+        orm_mode = True
+    id: int
+    email: str
+
