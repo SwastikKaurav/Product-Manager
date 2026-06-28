@@ -6,10 +6,14 @@ import database_models
 from sqlalchemy.orm import Session
 from crud import get_db, get_product, create_product, update_product, delete_product
 from fastapi.middleware.cors import CORSMiddleware
+from auth_routes import router as auth_router
+
 
 app = FastAPI()
 
 database_models.Base.metadata.create_all(bind=engine)
+
+app.include_router(auth_router)
 
 app.add_middleware(
     CORSMiddleware,
@@ -42,3 +46,4 @@ def update_products(product_id: int, product: Product, db: Session = Depends(get
 @app.delete("/products/delete/{product_id}", response_model=Product)
 def delete_products(product_id: int, db: Session = Depends(get_db)):
     return delete_product(product_id, db)
+
