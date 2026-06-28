@@ -1,7 +1,7 @@
 import database_models
 from database import SessionMaker
 from sqlalchemy.orm import Session
-from models import Product
+from models import Product, UserRegister, UserLogin, UserResponse
 
 def get_db():
     db = SessionMaker()
@@ -45,3 +45,12 @@ def delete_product(product_id:int, db: Session):
     else:
         return "product not found"
 
+def create_user(email: str, hashed_password: str, db: Session):
+    email_exists = db.query(database_models.User).filter(database_models.User.email == email).first()
+    if email_exists:
+        return "email exists"
+    db_user = database_models.User(email=email, hashed_password=hashed_password)
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
