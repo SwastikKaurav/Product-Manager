@@ -1,3 +1,3 @@
-from fastapi import FastAPI
+from fastapi import AIPRouter
 
-app = FastAPI()
+router = AIPRouter()
