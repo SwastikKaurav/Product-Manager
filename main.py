@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from crud import get_db, get_product, create_product, update_product, delete_product
 from fastapi.middleware.cors import CORSMiddleware
 from auth_routes import router as auth_router
+from auth import get_current_user
 
 
 app = FastAPI()
@@ -34,16 +35,16 @@ def get_products(db: Session = Depends(get_db)):
 
 
 @app.post("/products/create/", response_model=Product)
-def create_products(product: Product, db: Session = Depends(get_db)):
+def create_products(product: Product, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
     return create_product(product, db)
 
 
 @app.put("/products/{product_id}", response_model=Product)
-def update_products(product_id: int, product: Product, db: Session = Depends(get_db)):
+def update_products(product_id: int, product: Product, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
     return update_product(product, product_id, db)
 
 
 @app.delete("/products/delete/{product_id}", response_model=Product)
-def delete_products(product_id: int, db: Session = Depends(get_db)):
+def delete_products(product_id: int, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
     return delete_product(product_id, db)
 
