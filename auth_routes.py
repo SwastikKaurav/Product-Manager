@@ -16,8 +16,8 @@ def create_users(userRegister: UserRegister, db: Session = Depends(get_db)):
 @router.post("/auth/login")
 def login_users(userLogin: UserLogin, db: Session = Depends(get_db)):
     db_user = get_user_by_email(userLogin.email, db)
-    hash_password = db_user.hashed_password
-    if verify_password(userLogin.password, hash_password):
+    stored_hash = db_user.hashed_password
+    if verify_password(userLogin.password, stored_hash):
         return create_access_token(db_user.id, db_user.email)
     else:
         raise HTTPException(status_code=401, detail="Incorrect password")
