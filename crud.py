@@ -2,6 +2,7 @@ import database_models
 from database import SessionMaker
 from sqlalchemy.orm import Session
 from models import Product
+from fastapi import HTTPException
 
 def get_db():
     db = SessionMaker()
@@ -48,7 +49,7 @@ def delete_product(product_id:int, db: Session):
 def create_user(email: str, hashed_password: str, db: Session):
     email_exists = db.query(database_models.User).filter(database_models.User.email == email).first()
     if email_exists:
-        return "email exists"
+        raise HTTPException(status_code = 400, detail = "email exists")
     db_user = database_models.User(email=email, hashed_password=hashed_password)
     db.add(db_user)
     db.commit()
@@ -58,6 +59,6 @@ def create_user(email: str, hashed_password: str, db: Session):
 def get_user_by_email(email: str, db: Session):
     db_user = db.query(database_models.User).filter(database_models.User.email == email).first()
     if not db_user:
-        return "register with an email first"
+        raise HTTPException(status_code = 404, detail = "user not found")
     return db_user
     
