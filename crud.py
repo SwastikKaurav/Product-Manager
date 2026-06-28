@@ -1,7 +1,7 @@
 import database_models
 from database import SessionMaker
 from sqlalchemy.orm import Session
-from models import Product, UserRegister, UserLogin, UserResponse
+from models import Product
 
 def get_db():
     db = SessionMaker()
@@ -54,3 +54,10 @@ def create_user(email: str, hashed_password: str, db: Session):
     db.commit()
     db.refresh(db_user)
     return db_user
+
+def get_user_by_email(email: str, db: Session):
+    db_user = db.query(database_models.User).filter(database_models.User.email == email).first()
+    if not db_user:
+        return "register with an email first"
+    return db_user
+    
