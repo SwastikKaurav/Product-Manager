@@ -4,7 +4,8 @@ from datetime import datetime, timedelta
 from dotenv import load_dotenv
 import os
 from fastapi import Depends, HTTPException
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import OAuth2PasswordBearer #token extractor from the authorization header.
+
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
